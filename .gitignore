@@ -6,6 +6,4 @@
 
 /.idea
 
-/tests/Application/shipping_labels/
-
 /behat.yml

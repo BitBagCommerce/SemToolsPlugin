@@ -1,0 +1,18 @@
+services:
+    bitbag.sem_tools_plugin.feed_parser.google:
+        class: BitBag\SEMToolsPlugin\FeedParser\GoogleFeedParser
+        arguments:
+            - '@bitbag.sem_tools_plugin.feed_parser.helper'
+
+    bitbag.sem_tools_plugin.feed_parser.facebook:
+        class: BitBag\SEMToolsPlugin\FeedParser\FacebookFeedParser
+        arguments:
+            - '@bitbag.sem_tools_plugin.feed_parser.helper'
+
+    bitbag.sem_tools_plugin.feed_parser.helper:
+        class: BitBag\SEMToolsPlugin\FeedParser\FeedParserHelper
+        arguments:
+            - '@router'
+            - '@sylius.templating.helper.inventory'
+            - '@sylius.calculator.product_variant_price'
+            - '@sylius.context.channel.request_based'
