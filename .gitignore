@@ -1,0 +1,11 @@
+/vendor/
+/node_modules/
+
+/etc/build/*
+!/etc/build/.gitkeep
+
+/.idea
+
+/tests/Application/shipping_labels/
+
+/behat.yml
