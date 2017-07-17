@@ -40,13 +40,18 @@ final class FacebookFeedParser implements FeedParserInterface
         return [
             'id' => $product->getId(),
             'availability' => $this->feedParserHelper->getAvailabilityStatus($product),
-            'condition' => '',//TODO
+            'condition' => 'new',//TODO
             'description' => $product->getDescription(),
             'image_link' => $this->feedParserHelper->createLinkToImageProduct($product),
             'link' => $this->feedParserHelper->createLinkToProduct($product),
             'title' => $product->getName(),
-            'price' => '',//TODO
+            'price' => $this->getPriceProduct($product),
             'mpn' => $product->getCode(),
         ];
+    }
+
+    public function getPriceProduct(ProductInterface $product)
+    {
+        return $this->feedParserHelper->getPriceProduct($product) . ' ' . $this->feedParserHelper->getCurrencyCode();
     }
 }

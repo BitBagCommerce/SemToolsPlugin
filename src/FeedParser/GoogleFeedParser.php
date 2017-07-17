@@ -19,6 +19,24 @@ use Sylius\Component\Product\Model\ProductOptionValueInterface;
  */
 final class GoogleFeedParser implements FeedParserInterface
 {
+    // list all categories products Google http://www.google.com/basepages/producttype/taxonomy-with-ids.pl-PL.xls
+    const GOOGLE_PRODUCT_CATEGORY = [
+        'clothes' => 166, // Ubrania i akcesoria
+        'shirts' => '', // TODO
+        't-shirts' => '', //TODO
+        'pullover' => '', // TODO
+        'trousers' => 204, // Ubrania i akcesoria > Ubrania > Spodnie
+        'jeans' => 204, // Ubrania i akcesoria > Ubrania > Spodnie
+        'shorts' => 207, // Ubrania i akcesoria > Ubrania > Szorty
+        'shoes' => 187, //  Ubrania i akcesoria > Buty
+        'accessories' => 167, // Ubrania i akcesoria > Akcesoria do ubrań
+        'ties' => 176, // Ubrania i akcesoria > Akcesoria do ubrań > Krawaty i muszki
+        'bow_ties' => 176, // Ubrania i akcesoria > Akcesoria do ubrań > Krawaty i muszki
+        'pocket_sqaures' => '', //TODO
+        'braces' => 179, // Ubrania i akcesoria > Akcesoria do ubrań > Szelki
+        'underwear' => 213, // Ubrania i akcesoria > Ubrania > Bielizna i skarpety
+    ];
+
     /**
      * @var FeedParserHelperInterface
      */
@@ -46,12 +64,12 @@ final class GoogleFeedParser implements FeedParserInterface
             'link' => $this->feedParserHelper->createLinkToProduct($product),
             'image_link' => $this->feedParserHelper->createLinkToImageProduct($product),
             'availability' => $this->feedParserHelper->getAvailabilityStatus($product),
-            'price' => '', //TODO
-            'currency' => '', //TODO
+            'price' => $this->feedParserHelper->getPriceProduct($product),
+            'currency' => $this->feedParserHelper->getCurrencyCode(),
             'google_​​product_​​category' => '', //TODO
             'gtin' => '', //TODO
             'mpn' => $product->getCode(),
-            'condition' => '', //TODO
+            'condition' => 'new', //TODO
             'adult' => 'no',
             'age_​​group ' => '', //TODO
             'gender' => '', //TODO

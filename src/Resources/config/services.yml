@@ -13,6 +13,7 @@ services:
         class: BitBag\SEMToolsPlugin\FeedParser\FeedParserHelper
         arguments:
             - '@router'
-            - '@sylius.templating.helper.inventory'
+            - '@sylius.availability_checker.default'
             - '@sylius.calculator.product_variant_price'
-            - '@sylius.context.channel.request_based'
+            - '@sylius.context.channel'
+            - '@sylius.context.currency'

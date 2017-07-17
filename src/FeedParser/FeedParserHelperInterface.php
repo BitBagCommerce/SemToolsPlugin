@@ -45,4 +45,16 @@ interface FeedParserHelperInterface
      * @return string
      */
     public function getAvailabilityStatus(ProductInterface $product);
+
+    /**
+     * @param ProductInterface $product
+     *
+     * @return int
+     */
+    public function getPriceProduct(ProductInterface $product);
+
+    /**
+     * @return string
+     */
+    public function getCurrencyCode();
 }

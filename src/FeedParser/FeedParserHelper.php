@@ -10,10 +10,12 @@
 
 namespace BitBag\SEMToolsPlugin\FeedParser;
 
-use Sylius\Bundle\InventoryBundle\Templating\Helper\InventoryHelper;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\RequestBased\ChannelContext;
 use Sylius\Component\Core\Calculator\ProductVariantPriceCalculator;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Sylius\Component\Inventory\Checker\AvailabilityCheckerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Sylius\Component\Inventory\Model\StockableInterface;
@@ -29,7 +31,7 @@ final class FeedParserHelper implements FeedParserHelperInterface
     private $router;
 
     /**
-     * @var InventoryHelper
+     * @var AvailabilityCheckerInterface
      */
     private $inventoryHelper;
 
@@ -44,24 +46,32 @@ final class FeedParserHelper implements FeedParserHelperInterface
     private $channelContext;
 
     /**
+     * @var CurrencyContextInterface
+     */
+    private $currencyContext;
+
+    /**
      * FeedParserHelper constructor.
      *
      * @param Router $router
-     * @param InventoryHelper $inventoryHelper
+     * @param AvailabilityCheckerInterface $inventoryHelper
      * @param ProductVariantPriceCalculator $productVariantPriceCalculator
-     * @param ChannelContext $channelContext
+     * @param ChannelContextInterface $channelContext
+     * @param CurrencyContextInterface $currencyContext
      */
     public function __construct(
         Router $router,
-        InventoryHelper $inventoryHelper,
+        AvailabilityCheckerInterface $inventoryHelper,
         ProductVariantPriceCalculator $productVariantPriceCalculator,
-        ChannelContext $channelContext
+        ChannelContextInterface  $channelContext,
+        CurrencyContextInterface $currencyContext
     )
     {
         $this->router = $router;
         $this->inventoryHelper = $inventoryHelper;
         $this->productVariantPriceCalculator = $productVariantPriceCalculator;
         $this->channelContext = $channelContext;
+        $this->currencyContext = $currencyContext;
     }
 
     /**
@@ -91,6 +101,27 @@ final class FeedParserHelper implements FeedParserHelperInterface
     public function inventoryIsAvailable(StockableInterface $stockable)
     {
         return $this->inventoryHelper->isStockAvailable($stockable);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPriceProduct(ProductInterface $product)
+    {
+        $price = $this->productVariantPriceCalculator->calculate($product->getVariants()->first(), [
+                'channel' => $this->channelContext->getChannel()
+            ]
+        );
+
+        return $price / 100;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCurrencyCode()
+    {
+        return $this->currencyContext->getCurrencyCode();
     }
 
     /**
