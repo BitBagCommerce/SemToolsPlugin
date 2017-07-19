@@ -66,15 +66,15 @@ final class GoogleFeedParser implements FeedParserInterface
             'availability' => $this->feedParserHelper->getAvailabilityStatus($product),
             'price' => $this->feedParserHelper->getPriceProduct($product),
             'currency' => $this->feedParserHelper->getCurrencyCode(),
-            'google_​​product_​​category' => '', //TODO
+            'google_​​product_​​category' => $this->getGoogleCategoryProduct($product),
             'gtin' => '', //TODO
             'mpn' => $product->getCode(),
             'condition' => 'new', //TODO
             'adult' => 'no',
-            'age_​​group ' => '', //TODO
-            'gender' => '', //TODO
-            'material' => '', //TODO
-            'pattern' => '', //TODO
+            'age_​​group ' => '', //TODO ---------
+            'gender' => '', //TODO -------
+            'material' => '', //TODO --------
+            'pattern' => '', //TODO ------
         ];
 
         $data = $this->parseVariantsProduct($product, $data);
@@ -116,9 +116,22 @@ final class GoogleFeedParser implements FeedParserInterface
 
         /** @var ProductOptionValueInterface $value */
         foreach ($values as $value) {
-            $values[] = $value->getName();
+            $result[] = $value->getName();
         }
 
         return $result;
+    }
+
+    /**
+     * @param ProductInterface $product
+     *
+     * @return int|null
+     */
+    public function getGoogleCategoryProduct(ProductInterface $product)
+    {
+        $codeTaxon = $product->getMainTaxon()->getCode();
+
+        return isset(self::GOOGLE_PRODUCT_CATEGORY[$codeTaxon]) ?
+            self::GOOGLE_PRODUCT_CATEGORY[$codeTaxon] : null;
     }
 }

@@ -13,6 +13,7 @@ namespace BitBag\SEMToolsPlugin\FeedParser;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\RequestBased\ChannelContext;
 use Sylius\Component\Core\Calculator\ProductVariantPriceCalculator;
+use Sylius\Component\Core\Calculator\ProductVariantPriceCalculatorInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Currency\Context\CurrencyContextInterface;
 use Sylius\Component\Inventory\Checker\AvailabilityCheckerInterface;
@@ -33,7 +34,7 @@ final class FeedParserHelper implements FeedParserHelperInterface
     /**
      * @var AvailabilityCheckerInterface
      */
-    private $inventoryHelper;
+    private $availabilityChecker;
 
     /**
      * @var ProductVariantPriceCalculator
@@ -54,21 +55,21 @@ final class FeedParserHelper implements FeedParserHelperInterface
      * FeedParserHelper constructor.
      *
      * @param Router $router
-     * @param AvailabilityCheckerInterface $inventoryHelper
-     * @param ProductVariantPriceCalculator $productVariantPriceCalculator
+     * @param AvailabilityCheckerInterface $availabilityChecker
+     * @param ProductVariantPriceCalculatorInterface $productVariantPriceCalculator
      * @param ChannelContextInterface $channelContext
      * @param CurrencyContextInterface $currencyContext
      */
     public function __construct(
         Router $router,
-        AvailabilityCheckerInterface $inventoryHelper,
-        ProductVariantPriceCalculator $productVariantPriceCalculator,
+        AvailabilityCheckerInterface $availabilityChecker,
+        ProductVariantPriceCalculatorInterface $productVariantPriceCalculator,
         ChannelContextInterface  $channelContext,
         CurrencyContextInterface $currencyContext
     )
     {
         $this->router = $router;
-        $this->inventoryHelper = $inventoryHelper;
+        $this->availabilityChecker = $availabilityChecker;
         $this->productVariantPriceCalculator = $productVariantPriceCalculator;
         $this->channelContext = $channelContext;
         $this->currencyContext = $currencyContext;
@@ -100,7 +101,7 @@ final class FeedParserHelper implements FeedParserHelperInterface
      */
     public function inventoryIsAvailable(StockableInterface $stockable)
     {
-        return $this->inventoryHelper->isStockAvailable($stockable);
+        return $this->availabilityChecker->isStockAvailable($stockable);
     }
 
     /**
